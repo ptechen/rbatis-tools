@@ -1,0 +1,21 @@
+[package]
+name = "rbatis-tools"
+version = "0.1.0"
+authors = ["taochen"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+Inflector = "0.11.4"
+lazy_static = "1.4.0"
+mysql = "20.1.0"
+quicli = "0.4.0"
+regex = "1.5.4"
+structopt = "0.3.21"
+async-std = { version = "1.9.0", features = ["attributes"] }
+serde = "1.0.126"
+serde_json = "1.0.64"
+serde_derive = "1.0.126"
+serde_yaml = "0.8.17"
+chrono = "0.4.19"

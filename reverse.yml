@@ -1,0 +1,8 @@
+database: db_name
+conn_str: root:password@127.0.0.1:3306/db_name
+include_tables: # tables included
+#  - tables_name
+exclude_tables: # tables excluded
+#  - gao_kao_school
+output_dir: ./hyat # code output directory
+struct_head: ''
