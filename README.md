@@ -2,4 +2,7 @@
 
 # Generate the RUST structure based on the MySQL table structure
 
-rbatis-tools mysql -f reverse.yml
+## Install
+    `cargo install rbatis-tools`
+## Exec
+    `rbatis-tools mysql -f reverse.yml`
