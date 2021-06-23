@@ -56,7 +56,7 @@ async fn gen_struct(table_name: String, fields: Vec<Row>, struct_head: &String) 
         let field_name: String = field.get(0).unwrap();
         let mut field_type: String = field.get(1).unwrap();
         field_type = mysql2rust_type(field_type).await?;
-        struct_str = format!("{}{}", struct_str, format!("\t{}: {},\n", field_name, field_type));
+        struct_str = format!("{}{}", struct_str, format!("\tpub {}: {},\n", field_name, field_type));
     }
     if struct_head != "" {
         struct_str = format!("{}\n{}\n{}{}\n", USE_LIB.clone(), struct_head, struct_str, "}");
