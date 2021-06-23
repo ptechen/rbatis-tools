@@ -58,11 +58,8 @@ async fn gen_struct(table_name: String, fields: Vec<Row>, struct_head: &String) 
         field_type = mysql2rust_type(field_type).await?;
         struct_str = format!("{}{}", struct_str, format!("\tpub {}: {},\n", field_name, field_type));
     }
-    if struct_head != "" {
-        struct_str = format!("{}\n{}\n{}{}\n", USE_LIB.clone(), struct_head, struct_str, "}");
-    } else {
-        struct_str = format!("{}\n{}\n{}{}\n", USE_LIB.clone(), STRUCT_HEAD.clone(), struct_str, "}");
-    }
+
+    struct_str = format!("{}\n{}\n{}{}\n", USE_LIB.clone(), struct_head, struct_str, "}");
     Ok(struct_str)
 }
 
@@ -103,8 +100,8 @@ pub async fn run(config: CustomConfig) -> CliResult {
         mod_array.push(format!("pub mod {};\n", table));
         let sql = format!("show full columns from {}", table);
         let r: Vec<Row> = conn.query(&sql)?;
-        let default = String::new();
-        let struct_head = config.struct_head.as_ref().unwrap_or(&default);
+        let default = &STRUCT_HEAD.to_owned();
+        let struct_head = config.struct_head.as_ref().unwrap_or(default);
         let mut table_name = table.to_camel_case();
         table_name = first_char_to_uppercase(table_name).await?;
         let struct_str = gen_struct(table_name, r, struct_head).await?;
