@@ -31,8 +31,8 @@ lazy_static! {
         map.insert(r"^double", "f64");
         map.insert(r"^decimal", "String");
         map.insert(r"^date$", "Date");
-        map.insert(r"^datetime$", "DateTime<Local>");
-        map.insert(r"^timestamp$", "DateTime<Utc>");
+        map.insert(r"^datetime$", "NaiveDateTime");
+        map.insert(r"^timestamp$", "NaiveDateTime");
         map.insert(r"year", "Year");
         map.insert(r"char", "String");
         map.insert(r"text", "String");
