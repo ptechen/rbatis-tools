@@ -3,8 +3,12 @@ name = "rbatis-tools"
 version = "0.1.0"
 authors = ["taochen"]
 edition = "2018"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+homepage = "https://github.com/ptechen"
+documentation = "https://github.com/ptechen/rbatis-tools/blob/main/README.md"
+repository = "https://github.com/ptechen/rbatis-tools.git"
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+description = "Generate the RUST structure based on the MySQL table structure"
 
 [dependencies]
 Inflector = "0.11.4"

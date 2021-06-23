@@ -4,5 +4,5 @@ include_tables: # tables included
 #  - tables_name
 exclude_tables: # tables excluded
 #  - gao_kao_school
-output_dir: ./hyat # code output directory
+output_dir: ./dir # code output directory
 struct_head: ''
