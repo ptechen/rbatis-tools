@@ -127,7 +127,7 @@ pub async fn run(config: CustomConfig) -> CliResult {
         let sql = format!("show full columns from {}", table);
         let r: Vec<Row> = conn.query(&sql)?;
         let default = &STRUCT_HEAD.to_owned();
-        let mut struct_head = config.struct_head.as_ref().unwrap();
+        let mut struct_head = config.struct_head.as_ref().unwrap_or(default);
         if struct_head == "" {
             struct_head = default;
         }
