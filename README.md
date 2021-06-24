@@ -14,10 +14,10 @@
 ## Example
     use serde_derive;
     use chrono::prelude::*;
-
-    #[crud_table]
-    #[derive(Default, Debug, Clone, PartialEq, serde_derive::Serialize, serde_derive::Deserialize)]
+    
     /// Test
+    #[crud_table]
+    #[derive(Default, Debug, Clone, PartialEq, serde_derive::Serialize, serde_derive::Deserialize)
     pub struct Test {
         pub id: Option<u32>,
         /// uuid
