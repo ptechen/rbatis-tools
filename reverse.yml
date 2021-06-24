@@ -5,4 +5,4 @@ include_tables: # Include tables, can be ignored.
 exclude_tables: # Exclude, tables, can be ignored.
 #  - tables_name
 output_dir: ./dir # code output directory
-struct_head: ''
+struct_head:     # Custom structure header, do not write using the default value.
