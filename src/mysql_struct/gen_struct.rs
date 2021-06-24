@@ -50,13 +50,7 @@ lazy_static! {
 }
 
 async fn gen_struct(table_name: String, fields: Vec<Row>, struct_head: &String, table_comment: Option<&String>) -> std::io::Result<String> {
-    let mut struct_str;
-    if table_comment.is_some() {
-        let table_comment = table_comment.unwrap();
-        struct_str = format!("/// {}\npub struct {} {{\n", table_comment, table_name);
-    } else {
-        struct_str = format!("pub struct {} {{\n", table_name);
-    }
+    let mut struct_str = format!("pub struct {} {{\n", table_name);
     for field in fields.iter() {
         let field_name: String = field.get(0).unwrap();
         let mut field_type: String = field.get(1).unwrap();
@@ -73,7 +67,13 @@ async fn gen_struct(table_name: String, fields: Vec<Row>, struct_head: &String, 
             struct_str = format!("{}{}", struct_str, format!("\tpub {}: {},\n", field_name, field_type));
         }
     }
-    struct_str = format!("{}\n{}\n{}{}\n", USE_LIB.clone(), struct_head, struct_str, "}");
+    if table_comment.is_some() {
+        let table_comment = table_comment.unwrap();
+        struct_str = format!("{}\n/// {}\n{}\n{}}}\n", USE_LIB.clone(), table_comment, struct_head, struct_str);
+    } else {
+        struct_str = format!("{}\n{}\n{}}}\n", USE_LIB.clone(), struct_head, struct_str);
+    }
+
     Ok(struct_str)
 }
 
@@ -104,7 +104,7 @@ pub async fn run(config: CustomConfig) -> CliResult {
     let mut table_comment_map = HashMap::new();
     for row in tables_status.iter() {
         let table_name: String = row.get(0).unwrap();
-        let table_comment:Option<String> = row.get(17);
+        let table_comment: Option<String> = row.get(17);
         if table_comment.is_some() {
             let table_comment = table_comment.unwrap();
             if table_comment != "" {
