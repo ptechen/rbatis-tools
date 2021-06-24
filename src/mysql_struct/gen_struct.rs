@@ -50,15 +50,21 @@ lazy_static! {
 
 }
 
-async fn gen_struct(table_name: String, fields: Vec<Row>, struct_head: &String) -> std::io::Result<String> {
-    let mut struct_str = format!("pub struct {} {{\n", table_name);
+async fn gen_struct(table_name: String, fields: Vec<Row>, struct_head: &String, table_comment: Option<&String>) -> std::io::Result<String> {
+    let mut struct_str;
+    if table_comment.is_some() {
+        let table_comment = table_comment.unwrap();
+        struct_str = format!("/// {}\npub struct {} {{\n", table_comment, table_name);
+    } else {
+        struct_str = format!("pub struct {} {{\n", table_name);
+    }
     for field in fields.iter() {
         let field_name: String = field.get(0).unwrap();
         let mut field_type: String = field.get(1).unwrap();
         field_type = mysql2rust_type(field_type).await?;
         let comment: Option<String> = field.get(8);
         if comment.is_some() {
-            let comment:String = comment.unwrap();
+            let comment: String = comment.unwrap();
             if comment == "" {
                 struct_str = format!("{}{}", struct_str, format!("\tpub {}: {},\n", field_name, field_type));
             } else {
@@ -95,36 +101,52 @@ pub async fn run(config: CustomConfig) -> CliResult {
             .query(sql)
             .unwrap();
     }
-
+    let tables_status: Vec<Row> = conn.query("show table status").unwrap();
+    let mut table_comment_map = HashMap::new();
+    for row in tables_status.iter() {
+        let table_name: String = row.get(0).unwrap();
+        let table_comment:Option<String> = row.get(17);
+        if table_comment.is_some() {
+            let table_comment = table_comment.unwrap();
+            if table_comment != "" {
+                table_comment_map.insert(table_name, table_comment);
+            }
+        };
+    };
     create_dir(&config.output_dir)?;
     let mut mod_array = vec![];
     let mut exclude_tables: Vec<String> = vec![];
     if config.exclude_tables.is_some() {
         exclude_tables = config.exclude_tables.unwrap();
-    }
+    };
     for table in tables.iter() {
         if exclude_tables.contains(table) {
             continue;
-        }
+        };
         mod_array.push(format!("pub mod {};\n", table));
         let sql = format!("show full columns from {}", table);
         let r: Vec<Row> = conn.query(&sql)?;
         let default = &STRUCT_HEAD.to_owned();
-        let struct_head = config.struct_head.as_ref().unwrap_or(default);
+        let mut struct_head = config.struct_head.as_ref().unwrap();
+        if struct_head == "" {
+            struct_head = default;
+        }
         let mut table_name = table.to_camel_case();
         table_name = first_char_to_uppercase(table_name).await?;
-        let struct_str = gen_struct(table_name, r, struct_head).await?;
+        let table_comment = table_comment_map.get(table);
+        println!("{:?}", table_comment);
+        let struct_str = gen_struct(table_name, r, struct_head, table_comment).await?;
         let filepath = format!("{}/{}.rs", &config.output_dir, table);
         let filepath = Path::new(&filepath);
         write_to_file(filepath, &struct_str)?;
-    }
+    };
     let filepath = format!("{}/{}.rs", &config.output_dir, "mod");
     let file_content = file_content(&filepath).await?;
     for v in mod_array.iter() {
         if !file_content.contains(v) {
             let mut file = OpenOptions::new().append(true).open(&filepath).await?;
             file.write(v.as_bytes()).await?;
-        }
+        };
     };
     Ok(())
 }
