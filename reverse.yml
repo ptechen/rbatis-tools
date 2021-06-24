@@ -1,8 +1,8 @@
 database: db_name
 conn_str: root:password@127.0.0.1:3306/db_name
 include_tables: # Include tables, can be ignored.
-#  - tables_name
+#  - table_name
 exclude_tables: # Exclude, tables, can be ignored.
-#  - tables_name
+#  - table_name
 output_dir: ./dir # code output directory
 struct_head:     # Custom structure header, do not write using the default value.
