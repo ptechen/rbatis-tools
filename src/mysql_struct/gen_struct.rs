@@ -47,7 +47,6 @@ lazy_static! {
     static ref STRUCT_HEAD:String = {
         String::from("#[crud_table]\n#[derive(Default, Debug, Clone, PartialEq, serde_derive::Serialize, serde_derive::Deserialize)]")
     };
-
 }
 
 async fn gen_struct(table_name: String, fields: Vec<Row>, struct_head: &String, table_comment: Option<&String>) -> std::io::Result<String> {
@@ -131,7 +130,6 @@ pub async fn run(config: CustomConfig) -> CliResult {
         let mut table_name = table.to_camel_case();
         table_name = first_char_to_uppercase(table_name).await?;
         let table_comment = table_comment_map.get(table);
-        println!("{:?}", table_comment);
         let struct_str = gen_struct(table_name, r, struct_head, table_comment).await?;
         let filepath = format!("{}/{}.rs", &config.output_dir, table);
         let filepath = Path::new(&filepath);
