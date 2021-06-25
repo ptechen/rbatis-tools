@@ -22,7 +22,6 @@
     exclude_tables: # Exclude, tables, can be ignored.
     #  - table_name
     output_dir: ./dir # code output directory
-    struct_head:     # Custom structure header, do not write using the default value.
 
 ## Template Struct:
     #[derive(Serialize)]
