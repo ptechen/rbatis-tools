@@ -1,6 +1,6 @@
 [package]
 name = "rbatis-tools"
-version = "0.1.7"
+version = "0.1.8"
 authors = ["taochen"]
 edition = "2018"
 homepage = "https://github.com/ptechen"
@@ -22,3 +22,6 @@ serde = "1.0.126"
 serde_derive = "1.0.126"
 serde_yaml = "0.8.17"
 chrono = "0.4.19"
+tera = "1.11.0"
+async-trait = "0.1.50"
+serde_json = "1.0.64"

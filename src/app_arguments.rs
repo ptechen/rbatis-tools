@@ -15,7 +15,13 @@ pub enum Command {
 
 #[derive(Debug, StructOpt)]
 pub struct Mysql {
-    /// Input file to read
-    #[structopt(short = "f", default_value="./reverse.yml")]
+    /// Input config file to read
+    #[structopt(short = "f", default_value = "./reverse.yml")]
     pub file: String,
+    /// Input template path
+    #[structopt(short = "p", default_value = "templates/*")]
+    pub template_path: String,
+    /// Input template name
+    #[structopt(short = "n", default_value = "base.tera")]
+    pub template_name: String,
 }
