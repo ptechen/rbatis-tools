@@ -11,6 +11,7 @@
 
 ## Exec，you need to make sure you're in the same directory as templates.
     rbatis-tools mysql -f reverse.yml
+## Custom Exec, 
     rbatis-tools mysql -f reverse.yml -p 'templates/*' -n base.tera
 
 ## reverse.yml
