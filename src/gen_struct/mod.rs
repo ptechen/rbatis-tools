@@ -47,7 +47,7 @@ pub trait GenStruct {
         Ok(())
     }
 
-    async fn file_content(&self, filepath: &String) -> async_std::io::Result<String> {
+    async fn file_content(&self, filepath: &String) -> Result<String> {
         let s = read_file(filepath);
         let s = match s {
             Ok(d) => d,
