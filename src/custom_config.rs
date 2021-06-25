@@ -7,5 +7,4 @@ pub struct CustomConfig {
     pub include_tables: Option<Vec<String>>,
     pub exclude_tables: Option<Vec<String>>,
     pub output_dir: String,
-    pub struct_head: Option<String>,
 }
