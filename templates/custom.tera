@@ -11,7 +11,7 @@ pub struct {{ template.struct_name }} {
 	{% if v.comment -%}
 	    /// {{ v.comment }}
 	{% endif -%}
-	pub {{ v.field_name }}: {{ v.field_type }},
+	pub {{ v.field_name }}: Option<{{ v.field_type }}>,
 {%- endfor %}
 }
 

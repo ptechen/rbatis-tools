@@ -4,7 +4,7 @@
 [![Version info](https://img.shields.io/crates/v/rbatis-tools.svg)](https://crates.io/crates/capricorn)
 [![Downloads](https://img.shields.io/crates/d/rbatis-tools.svg?style=flat-square)](https://crates.io/crates/capricorn)
 [![docs](https://img.shields.io/badge/docs-latest-blue.svg?style=flat-square)](https://docs.rs/rbatis-tools)
-[![dependency status](https://deps.rs/crate/rbatis-tools/0.1.9/status.svg)](https://deps.rs/crate/capricorn)
+[![dependency status](https://deps.rs/crate/rbatis-tools/0.1.10/status.svg)](https://deps.rs/crate/capricorn)
 
 ## Install
     cargo install rbatis-tools
@@ -52,7 +52,7 @@
         {% if v.comment -%}
             /// {{ v.comment }}
         {% endif -%}
-        pub {{ v.field_name }}: {{ v.field_type }},
+        pub {{ v.field_name }}: Option<{{ v.field_type }}>,
     {%- endfor %}
     }
 

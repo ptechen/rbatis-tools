@@ -132,7 +132,7 @@ impl GenStruct for MysqlStruct {
         for (k, v) in FIELD_TYPE.iter() {
             let r = Regex::new(k.trim()).unwrap();
             if r.is_match(&field_type) {
-                return Ok(format!("Option<{}>", v));
+                return Ok(v.to_string());
             }
         }
         Ok(String::new())
