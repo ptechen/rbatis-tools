@@ -17,7 +17,7 @@ pub struct {{ template.struct_name }} {
 
 impl {{ template.struct_name }} {
     {%- for v in template.fields %}
-    pub fn get_{{ v.field_name }}(&self) -> {{ v.field_type }} {
+    pub fn get_{{ v.field_name }}(&self) -> Option<{{ v.field_type }}> {
     	self.{{ v.field_name }}
     }
     {%- endfor %}
