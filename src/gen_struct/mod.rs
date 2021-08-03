@@ -11,6 +11,7 @@ pub mod mysql_struct;
 pub mod template;
 
 pub struct GenTemplateData {
+    pub table_name: String,
     pub struct_name: String,
     pub mysql_rows: Option<Vec<Row>>,
     pub table_comment: String,

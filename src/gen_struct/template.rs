@@ -3,6 +3,7 @@ use tera::{Context, Result, Tera};
 
 #[derive(Serialize)]
 pub struct Template {
+    pub table_name: String,
     pub struct_name: String,
     pub fields: Vec<Field>,
     pub comment: String,
@@ -13,11 +14,13 @@ pub struct Field {
     pub field_name: String,
     pub field_type: String,
     pub comment: String,
+    pub validate: String,
 }
 
 impl Template {
-    pub fn new(struct_name: String, fields: Vec<Field>, comment: String) -> Template {
+    pub fn new(table_name: String, struct_name: String, fields: Vec<Field>, comment: String) -> Template {
         Template {
+            table_name,
             struct_name,
             fields,
             comment,

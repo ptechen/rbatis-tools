@@ -98,19 +98,21 @@ impl GenStruct for MysqlStruct {
         if self.config.exclude_tables.is_some() {
             exclude_tables = self.config.exclude_tables.as_ref().unwrap().to_owned();
         };
-        for table in tables.iter() {
-            if exclude_tables.contains(table) {
+        for table_name in tables.iter() {
+            if exclude_tables.contains(table_name) {
                 continue;
             };
-            mod_array.push(format!("pub mod {};\n", table));
-            let sql = format!("show full columns from {}", table);
+            mod_array.push(format!("pub mod {};\n", table_name));
+            let sql = format!("show full columns from {}", table_name);
             let mysql_rows: Vec<Row> = conn.query(&sql)?;
-            let mut struct_name = table.to_camel_case();
+            let mut struct_name = table_name.to_camel_case();
             struct_name = self.first_char_to_uppercase(&struct_name).await?;
             let default = &String::new();
-            let table_comment = table_comment_map.get(table).unwrap_or(default).to_string();
+            let table_comment = table_comment_map.get(table_name).unwrap_or(default).to_string();
             let mysql_rows = Some(mysql_rows);
+            let table_name = String::from(table_name);
             let gen_template_data = GenTemplateData {
+                table_name,
                 struct_name,
                 mysql_rows,
                 table_comment,
@@ -118,7 +120,7 @@ impl GenStruct for MysqlStruct {
                 template_name: self.template_name.to_owned(),
             };
             let struct_str = self.gen_template_data(gen_template_data).await?;
-            let filepath = format!("{}/{}.rs", self.config.output_dir, table);
+            let filepath = format!("{}/{}.rs", self.config.output_dir, table_name);
             self.write_to_file(&filepath, &struct_str).await?;
         }
         let filepath = format!("{}/{}.rs", self.config.output_dir, "mod");
@@ -145,15 +147,18 @@ impl GenStruct for MysqlStruct {
             let field_name: String = row.get(0).unwrap();
             let mut field_type: String = row.get(1).unwrap();
             field_type = self.get_rust_type(&field_type).await?;
+
             let comment: String = row.get(8).unwrap_or(String::new());
             let field = Field {
                 field_name,
                 field_type,
                 comment,
+                validate,
             };
             fields.push(field);
         }
         let temp = Template::new(
+            gen_template_data.table_name,
             gen_template_data.struct_name,
             fields,
             gen_template_data.table_comment,
