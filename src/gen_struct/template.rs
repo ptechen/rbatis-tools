@@ -14,7 +14,6 @@ pub struct Field {
     pub field_name: String,
     pub field_type: String,
     pub comment: String,
-    pub validate: String,
 }
 
 impl Template {

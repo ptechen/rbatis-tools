@@ -153,7 +153,6 @@ impl GenStruct for MysqlStruct {
                 field_name,
                 field_type,
                 comment,
-                validate,
             };
             fields.push(field);
         }
