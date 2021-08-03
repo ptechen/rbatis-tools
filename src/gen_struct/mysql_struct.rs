@@ -110,9 +110,8 @@ impl GenStruct for MysqlStruct {
             let default = &String::new();
             let table_comment = table_comment_map.get(table_name).unwrap_or(default).to_string();
             let mysql_rows = Some(mysql_rows);
-            let table_name = String::from(table_name);
             let gen_template_data = GenTemplateData {
-                table_name,
+                table_name: table_name.to_owned(),
                 struct_name,
                 mysql_rows,
                 table_comment,
