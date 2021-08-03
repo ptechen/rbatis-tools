@@ -26,6 +26,7 @@
 ## Template Struct:
     #[derive(Serialize)]
     pub struct Template {
+        pub table_name: String,
         pub struct_name: String,
         pub fields: Vec<Field>, 
         pub comment: String,
