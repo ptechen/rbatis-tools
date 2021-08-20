@@ -11,6 +11,9 @@ use quicli::prelude::*;
 use regex::Regex;
 use std::collections::HashMap;
 use tera::{Result, Tera};
+use std::fs;
+
+const FLAG: &'static str = "// ***************************************以下是自定义代码区域******************************************";
 
 lazy_static! {
     static ref FIELD_TYPE: HashMap<&'static str, &'static str> = {
@@ -118,8 +121,18 @@ impl GenStruct for MysqlStruct {
                 tera: self.tera.to_owned(),
                 template_name: self.template_name.to_owned(),
             };
-            let struct_str = self.gen_template_data(gen_template_data).await?;
+            let mut struct_str = self.gen_template_data(gen_template_data).await?;
             let filepath = format!("{}/{}.rs", self.config.output_dir, table_name);
+            let mut custom = String::new();
+            match fs::read_to_string(&filepath) {
+                Ok(d) => {
+                    let vv:Vec<&str> = d.split(FLAG).collect();
+                    custom = vv.get(1).unwrap_or(&"").to_string();
+                }
+                _ => {}
+            }
+            struct_str = struct_str + "\n" + FLAG + custom.as_str();
+            println!("{}", struct_str);
             self.write_to_file(&filepath, &struct_str).await?;
         }
         let filepath = format!("{}/{}.rs", self.config.output_dir, "mod");
