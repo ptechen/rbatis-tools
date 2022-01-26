@@ -17,7 +17,12 @@ pub struct Field {
 }
 
 impl Template {
-    pub fn new(table_name: String, struct_name: String, fields: Vec<Field>, comment: String) -> Template {
+    pub fn new(
+        table_name: String,
+        struct_name: String,
+        fields: Vec<Field>,
+        comment: String,
+    ) -> Template {
         Template {
             table_name,
             struct_name,

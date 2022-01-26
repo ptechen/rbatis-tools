@@ -3,46 +3,56 @@ use crate::gen_struct::template::{Field, Template};
 use crate::gen_struct::{GenStruct, GenTemplateData};
 use async_trait::async_trait;
 use inflector::Inflector;
-use lazy_static::lazy_static;
 use mysql::prelude::*;
 use mysql::Row;
 use mysql::*;
+use once_cell::sync::Lazy;
 use quicli::prelude::*;
 use regex::Regex;
 use std::collections::HashMap;
-use tera::{Result, Tera};
 use std::fs;
+use tera::{Result, Tera};
 
 const FLAG: &'static str = "// ***************************************以下是自定义代码区域******************************************";
 
-lazy_static! {
-    static ref FIELD_TYPE: HashMap<&'static str, &'static str> = {
-        let mut map = HashMap::new();
-        map.insert(r"^int\(\d+\)$", "i32");
-        map.insert(r"^int\(\d+\) unsigned$", "u32");
-        map.insert(r"^integer\(\d+\)$", "i32");
-        map.insert(r"^integer\(\d+\) unsigned$", "u32");
-        map.insert(r"^tinyint\(\d+\)$", "i8");
-        map.insert(r"^tinyint\(\d+\) unsigned$", "u8");
-        map.insert(r"^smallint\(\d+\)$", "i16");
-        map.insert(r"^smallint\(\d+\) unsigned$", "u16");
-        map.insert(r"^mediumint\(\d+\)$", "i32");
-        map.insert(r"^mediumint\(\d+\) unsigned$", "u32");
-        map.insert(r"^bigint\(\d+\)$", "i64");
-        map.insert(r"^bigint\(\d+\) unsigned$", "u64");
-        map.insert(r"^float", "f32");
-        map.insert(r"^double", "f64");
-        map.insert(r"^decimal", "String");
-        map.insert(r"^date$", "Date");
-        map.insert(r"^datetime$", "NaiveDateTime");
-        map.insert(r"^timestamp$", "NaiveDateTime");
-        map.insert(r"year", "Year");
-        map.insert(r"char", "String");
-        map.insert(r"text", "String");
-        map.insert(r"blob", "Vec<u8>");
-        map
-    };
-}
+static FIELD_TYPE: Lazy<HashMap<&'static str, &'static str>> = Lazy::new(|| {
+    let mut map = HashMap::new();
+    map.insert(r"^int$", "i32");
+    map.insert(r"^int unsigned$", "u32");
+    map.insert(r"^int\(\d+\)$", "i32");
+    map.insert(r"^int\(\d+\) unsigned$", "u32");
+    map.insert(r"^integer$", "i32");
+    map.insert(r"^integer unsigned$", "u32");
+    map.insert(r"^integer\(\d+\)$", "i32");
+    map.insert(r"^integer\(\d+\) unsigned$", "u32");
+    map.insert(r"^tinyint$", "i8");
+    map.insert(r"^tinyint unsigned$", "u8");
+    map.insert(r"^tinyint\(\d+\)$", "i8");
+    map.insert(r"^tinyint\(\d+\) unsigned$", "u8");
+    map.insert(r"^smallint$", "i16");
+    map.insert(r"^smallint unsigned$", "u16");
+    map.insert(r"^smallint\(\d+\)$", "i16");
+    map.insert(r"^smallint\(\d+\) unsigned$", "u16");
+    map.insert(r"^mediumint$", "i32");
+    map.insert(r"^mediumint unsigned$", "u32");
+    map.insert(r"^mediumint\(\d+\)$", "i32");
+    map.insert(r"^mediumint\(\d+\) unsigned$", "u32");
+    map.insert(r"^bigint$", "i64");
+    map.insert(r"^bigint unsigned$", "u64");
+    map.insert(r"^bigint\(\d+\)$", "i64");
+    map.insert(r"^bigint\(\d+\) unsigned$", "u64");
+    map.insert(r"^float", "f32");
+    map.insert(r"^double", "f64");
+    map.insert(r"^decimal", "Decimal");
+    map.insert(r"^date$", "Date");
+    map.insert(r"^datetime$", "NaiveDateTime");
+    map.insert(r"^timestamp$", "NaiveDateTime");
+    map.insert(r"year", "Year");
+    map.insert(r"char", "String");
+    map.insert(r"text", "String");
+    map.insert(r"blob", "Vec<u8>");
+    map
+});
 
 #[derive(Clone)]
 pub struct MysqlStruct {
@@ -70,7 +80,8 @@ impl MysqlStruct {
 impl GenStruct for MysqlStruct {
     async fn run(&self) -> CliResult {
         let url = format!("mysql://{}", self.config.conn_str);
-        let pool = Pool::new(url)?;
+        let opts = Opts::from_url(&url)?;
+        let pool = Pool::new(opts)?;
         let mut conn = pool.get_conn()?;
         let tables;
         let include_tables = self.config.include_tables.as_ref();
@@ -111,7 +122,10 @@ impl GenStruct for MysqlStruct {
             let mut struct_name = table_name.to_camel_case();
             struct_name = self.first_char_to_uppercase(&struct_name).await?;
             let default = &String::new();
-            let table_comment = table_comment_map.get(table_name).unwrap_or(default).to_string();
+            let table_comment = table_comment_map
+                .get(table_name)
+                .unwrap_or(default)
+                .to_string();
             let mysql_rows = Some(mysql_rows);
             let gen_template_data = GenTemplateData {
                 table_name: table_name.to_owned(),
@@ -126,7 +140,7 @@ impl GenStruct for MysqlStruct {
             let mut custom = String::new();
             match fs::read_to_string(&filepath) {
                 Ok(d) => {
-                    let vv:Vec<&str> = d.split(FLAG).collect();
+                    let vv: Vec<&str> = d.split(FLAG).collect();
                     custom = vv.get(1).unwrap_or(&"").to_string();
                 }
                 _ => {}
