@@ -146,7 +146,6 @@ impl GenStruct for MysqlStruct {
                 _ => {}
             }
             struct_str = struct_str + "\n" + FLAG + custom.as_str();
-            println!("{}", struct_str);
             self.write_to_file(&filepath, &struct_str).await?;
         }
         let filepath = format!("{}/{}.rs", self.config.output_dir, "mod");
@@ -173,12 +172,13 @@ impl GenStruct for MysqlStruct {
             let field_name: String = row.get(0).unwrap();
             let mut field_type: String = row.get(1).unwrap();
             field_type = self.get_rust_type(&field_type).await?;
-
+            let is_null:String = row.get(3).unwrap_or_default();
             let comment: String = row.get(8).unwrap_or(String::new());
             let field = Field {
                 field_name,
                 field_type,
                 comment,
+                is_null,
             };
             fields.push(field);
         }

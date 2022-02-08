@@ -9,11 +9,13 @@ pub struct Template {
     pub comment: String,
 }
 
-#[derive(Serialize, Clone)]
+#[derive(Serialize, Clone, Default)]
 pub struct Field {
     pub field_name: String,
     pub field_type: String,
     pub comment: String,
+    /// NO,YES
+    pub is_null: String,
 }
 
 impl Template {

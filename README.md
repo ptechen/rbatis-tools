@@ -37,6 +37,8 @@
         pub field_name: String,
         pub field_type: String,
         pub comment: String,
+        /// NO, YES
+        pub is_null: String,
     }
 
 ## Template:

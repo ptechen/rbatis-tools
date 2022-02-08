@@ -1,6 +1,6 @@
 [package]
 name = "rbatis-tools"
-version = "0.1.16"
+version = "0.1.17"
 authors = ["taochen"]
 edition = "2018"
 homepage = "https://github.com/ptechen"
