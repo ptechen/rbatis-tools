@@ -1,3 +1,11 @@
+## New package supports Mysql and PostgresSQL...
+[![Version info](https://img.shields.io/crates/v/sql_reverse.svg)](https://crates.io/crates/sql_reverse)
+[![Downloads](https://img.shields.io/crates/d/sql_reverse.svg?style=flat-square)](https://crates.io/crates/sql_reverse)
+[![docs](https://img.shields.io/badge/docs-latest-blue.svg?style=flat-square)](https://docs.rs/sql_reverse)
+[![dependency status](https://deps.rs/crate/sql_reverse/0.1.0/status.svg)](https://deps.rs/crate/sql_reverse)
+[![B站](https://img.shields.io/badge/B站-latest-blue.svg?style=flat-square)](https://www.bilibili.com/video/BV1dF411L7P7?spm_id_from=333.337.search-card.all.click)
+
+
 # rbatis-tools
 
 # Generate the RUST structure based on the MySQL table structure
