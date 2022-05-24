@@ -5,6 +5,8 @@
 [![dependency status](https://deps.rs/crate/sql_reverse/0.1.0/status.svg)](https://deps.rs/crate/sql_reverse)
 [![B站](https://img.shields.io/badge/B站-latest-blue.svg?style=flat-square)](https://www.bilibili.com/video/BV1dF411L7P7?spm_id_from=333.337.search-card.all.click)
 
+## Install
+    cargo install sql_reverse
 
 # rbatis-tools
 
